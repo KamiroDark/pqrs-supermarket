@@ -1,7 +1,7 @@
 # 🛒 Sistema PQRS — SuperMarket
 
 Proyecto académico — Ingeniería de Software I  
-Fundación Universitaria Konrad Lorenz · 2025-1
+Fundación Universitaria Konrad Lorenz · 2026-1
 
 ## Descripción
 
