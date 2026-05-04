@@ -1,6 +1,6 @@
 # Requerimientos Funcionales — PQRS SuperMarket
 
-**HU-1** Radicar PQRS
+**HU-01** Radicar PQRS
 
 **Historia de Usuario:**  
 > *Como **cliente**, quiero diligenciar y enviar una PQRS desde la página web, para registrar formalmente mi petición, queja, reclamo o sugerencia ante SuperMarket.*
@@ -12,10 +12,10 @@ El sistema debe permitir a los clientes registrar peticiones, quejas, reclamos o
 
 **Actor principal:** Cliente
 
-**Precondiciones:**  
-PRE-1: El cliente debe haber iniciado sesión en el sistema.  
-PRE-2: El sistema debe tener conexión a internet.  
-PRE-3: El módulo PQRS debe estar disponible.
+**Precondiciones:**
+  
+PRE-1: El sistema debe tener conexión a internet.  
+PRE-2: El módulo PQRS debe estar disponible.
 
 **Criterios de aceptación:**
 - El formulario solicita todos los campos obligatorios: tipo y número de identificación, nombre, correo, teléfono, tipo de radicado y comentarios.
@@ -47,7 +47,7 @@ E-4: Error al registrar la PQRS.
 
 ---
 
-**HU-2** Registro automático de cliente nuevo
+**HU-02** Registro automático de cliente nuevo
 
 **Historia de Usuario:**  
 > *Como **visitante**, quiero que el sistema me registre automáticamente al radicar mi primera PQRS, para no tener que crear una cuenta por separado antes de usar el servicio.*
@@ -84,7 +84,7 @@ E-2: Campos incompletos.
 
 ---
 
-**HU-3** Recepción de correo de confirmación
+**HU-03** Recepción de correo de confirmación
 
 **Historia de Usuario:**  
 Como cliente nuevo, quiero recibir un correo de confirmación, para validar mi registro.
@@ -123,7 +123,7 @@ E-1: Error en servidor de correo.
 > *Como **cliente**, quiero autenticarme en la página web con mis credenciales, para acceder de forma segura a mis PQRS radicados.*
 
 **Descripción:**  
-El sistema permitirá autenticación mediante correo y contraseña.
+El sistema permitirá autenticación mediante número de identificación y contraseña.
 
 **Prioridad:** Alta
 
@@ -262,7 +262,7 @@ El sistema permitirá acceso administrativo.
 **Actor principal:** Gestor PQRS
 
 **Precondiciones:**  
-PRE-1: 
+PRE-1: El gestor debe haber iniciado sesión en el sistema.
 
 **Criterios de aceptación:**
 - El acceso se concede solo con credenciales válidas de un usuario con perfil Gestor.
@@ -270,7 +270,7 @@ PRE-1:
 - La sesión expira tras un periodo de inactividad definido.
 
 **Flujo principal:**  
-1. Ingresa credenciales.  
+1. El gestor ingresa credenciales.  
 2. Sistema valida rol.  
 3. Acceso al panel administrativo.
 
@@ -278,7 +278,7 @@ PRE-1:
 Ingreso exitoso.
 
 **Excepciones:**  
-E-1: 
+E-1: Sesión expirada o no autorizada.
 
 ---
 
@@ -295,7 +295,7 @@ El sistema mostrará todas las PQRS registradas al usuario administrativo.
 **Actor principal:** Gestor PQRS
 
 **Precondiciones:**  
-PRE-1: 
+PRE-1: El gestor debe haber iniciado sesión en el sistema.
 
 **Criterios de aceptación:**
 - El listado muestra todos los radicados sin importar el cliente.
@@ -303,7 +303,7 @@ PRE-1:
 - El listado se puede paginar o desplazar si el volumen de registros es alto.
 
 **Flujo principal:**  
-1. Ingresa al módulo de gestión.  
+1. El gestor ingresa al módulo de gestión.  
 2. El sistema consulta todos los registros.  
 3. Muestra listado general.
 
@@ -311,7 +311,7 @@ PRE-1:
 Listado completo.
 
 **Excepciones:**  
-E-1: 
+E-1: Sesión expirada o no autorizada.
 
 ---
 
@@ -328,8 +328,7 @@ El sistema permitirá filtrar por tipo de PQRS y estado.
 **Actor principal:** Gestor PQRS
 
 **Precondiciones:**  
-PRE-1: Registro exitoso.  
-PRE-2: Correo válido.
+PRE-1: El gestor debe haber iniciado sesión.
 
 **Criterios de aceptación:**
 - Los filtros disponibles son: tipo de radicado (P/Q/R/S) y estado (Nuevo, En proceso, Resuelto, Rechazado).
@@ -337,15 +336,16 @@ PRE-2: Correo válido.
 - El listado se actualiza al aplicar o limpiar cualquier filtro.
 
 **Flujo principal:**  
-1. Selecciona filtros.  
-2. El sistema procesa consulta.  
-3. Muestra coincidencias.
+1. El gestor selecciona la pestaña de filtros. 
+2. El gestor selecciona los filtros que va a usar. 
+3. El sistema procesa consulta.  
+4. Muestra coincidencias.
 
 **Salida esperada:**  
 Listado filtrado.
 
 **Excepciones:**  
-E-1:
+E-1: Sesión expirada o no autorizada.
 
 ---
 
@@ -362,7 +362,7 @@ El sistema permitirá cambiar estados en las PQRS radicadas.
 **Actor principal:** Gestor PQRS
 
 **Precondiciones:**  
-PRE-1: 
+PRE-1: El gestor debe haber iniciado sesión en el sistema.
 
 **Criterios de aceptación:**
 - Los estados disponibles son: Nuevo, En proceso, Resuelto, Rechazado.
@@ -370,15 +370,18 @@ PRE-1:
 - El nuevo estado y la justificación quedan registrados y visibles en la web tanto para administrador como para cliente.
 
 **Flujo principal:**  
-1. Selecciona radicado.  
-2. Escoge nuevo estado.  
-3. Sistema guarda cambio.
+1. El gestor selecciona un radicado del listado.
+2. El gestor escoge el nuevo estado.
+3. El gestor ingresa la justificación (campo obligatorio).
+4. El sistema valida que la justificación no este vacia.
+5. El sistema guarda el cambio de estado y justificación.
+6. El listado se actualiza con el nuevo estado.
 
 **Salida esperada:**  
 Estado actualizado.
 
 **Excepciones:**  
-E-1:
+E-1: Sesión expirada o no autorizada.
 
 ---
 
@@ -395,7 +398,7 @@ El sistema permitirá descargar documentos adjuntos.
 **Actor principal:** Gestor PQRS
 
 **Precondiciones:**  
-PRE-1: 
+PRE-1: El gestor debe haber iniciado sesión en el sistema.
 
 **Criterios de aceptación:**
 - Cada radicado con anexo muestra un botón o enlace de descarga.
@@ -403,15 +406,15 @@ PRE-1:
 - Los radicados sin anexo no muestran la opción de descarga (o la muestran deshabilitada).
 
 **Flujo principal:**  
-1. Selecciona radicado.  
-2. Elige archivo adjunto.  
+1. El gestor selecciona radicado.  
+2. El gestor elige archivo adjunto.  
 3. Sistema descarga PDF.
 
 **Salida esperada:**  
 Archivo descargado.
 
 **Excepciones:**  
-E-1: 
+E-1: Sesión expirada o no autorizada.
 
 ---
 
@@ -428,7 +431,7 @@ El sistema generará un documento PDF con el listado de radicados.
 **Actor principal:** Gestor PQRS
 
 **Precondiciones:**  
-PRE-1: 
+PRE-1: El gestor debe haber iniciado sesión en el sistema.
 
 **Criterios de aceptación:**
 - El reporte refleja exactamente el listado visible en pantalla al momento de generarlo (con filtros activos).
@@ -437,15 +440,16 @@ PRE-1:
 - El reporte incluye fecha y hora de generación en el encabezado o pie de página.
 
 **Flujo principal:**  
-1. Ingresa al módulo reportes.  
-2. Selecciona generar PDF.  
+1. El gestor ingresa al módulo reportes.  
+2. El gestor selecciona generar PDF.  
 3. El sistema compila datos.  
-4. Descarga reporte.
+4. El sistema prepara la descarga reporte.
 
 **Salida esperada:**  
 Reporte PDF generado.
 
 **Excepciones:**  
 E-1: No existen datos para exportar.
+E-2: Sesión expirada o no autorizada.
 
 ---
