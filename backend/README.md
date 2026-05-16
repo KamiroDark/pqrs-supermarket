@@ -6,6 +6,7 @@ API REST construida con Node.js + Express + Sequelize sobre MySQL.
 
 - Node.js 18 o superior
 - MySQL 8.0 o superior
+- pnpm 11 o superior
 - Una base de datos creada con el nombre `pqrs_supermarket`
 
 ## Configuración
@@ -17,11 +18,11 @@ API REST construida con Node.js + Express + Sequelize sobre MySQL.
 
 ## Instalación
 
-npm install
+pnpm install
 
 ## Correr el servidor
 
-npm start
+pnpm start
 
 El servidor queda disponible en http://localhost:3000
 

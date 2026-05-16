@@ -186,9 +186,10 @@ tipo: descripción breve en minúsculas
 
 ## Estructura de carpetas
 
-```
+​```
 pqrs-supermarket/
-├── frontend/         # App Angular (web + responsiva móvil)
+├── app/              # App Móvil con Ionic + Angular (cliente PQRS)
+├── frontend/         # Aplicación Web con Angular (gestor PQRS)
 ├── backend/          # API REST con Node.js + Express
 ├── base-de-datos/    # Scripts SQL
 ├── docs/
@@ -199,7 +200,35 @@ pqrs-supermarket/
 │   └── pruebas/      # Plan y resultados de pruebas
 ├── README.md
 └── CONTRIBUTING.md   # Este archivo
-```
+​```
+
+---
+
+## Gestor de paquetes — pnpm
+
+Este proyecto usa **pnpm** exclusivamente. npm no está permitido.
+
+Para instalar pnpm si no lo tienes:
+​```bash
+curl -fsSL https://get.pnpm.io/install.sh | sh -
+source ~/.zshrc
+​```
+
+Al clonar el repo, instala las dependencias en cada componente por separado:
+​```bash
+cd backend && pnpm install
+cd ../frontend && pnpm install
+cd ../app && pnpm install
+​```
+
+Comandos de arranque:
+| Componente | Comando | URL |
+|---|---|---|
+| Backend | `pnpm start` | http://localhost:3000 |
+| Angular Web | `pnpm start` | http://localhost:4200 |
+| Ionic App | `pnpm ionic serve` | http://localhost:8100 |
+
+> **Nunca uses `npm install` ni `npm start`** en este proyecto.
 
 ---
 
