@@ -22,10 +22,10 @@ El sistema debe garantizar que ninguna contraseña sea almacenada en texto plano
 El sistema debe implementar un módulo de seguridad que administre usuarios, perfiles, opciones y permisos de forma granular para ambas plataformas. Los clientes (App Móvil) solo podrán acceder a sus propios radicados; los gestores (Aplicación Web) tendrán acceso al conjunto completo de PQRS.
 
 **Criterios de Aceptación:**
-- **CA-01** — El módulo de seguridad debe permitir crear, editar, activar e inactivar usuarios y perfiles tanto para el rol Cliente (App Móvil) como para el rol Gestor (Aplicación Web).
-- **CA-02** — Un cliente autenticado en la App Móvil únicamente puede visualizar y filtrar los radicados asociados a su número de identificación.
-- **CA-03** — El gestor autenticado en la Aplicación Web tiene acceso irrestricto a todos los radicados del sistema para consultarlos, filtrarlos y gestionarlos.
-- **CA-04** — Cualquier intento de acceder a recursos de un perfil diferente al asignado debe ser rechazado con un mensaje de error apropiado.
+
+- **CA-01** — Un cliente autenticado en la App Móvil únicamente puede visualizar y filtrar los radicados asociados a su número de identificación.
+- **CA-02** — El gestor autenticado en la Aplicación Web tiene acceso irrestricto a todos los radicados del sistema para consultarlos, filtrarlos y gestionarlos.
+- **CA-03** — Cualquier intento de acceder a recursos de un perfil diferente al asignado debe ser rechazado con un mensaje de error apropiado.
 
 ---
 
@@ -64,6 +64,8 @@ Todas las comunicaciones entre las plataformas cliente (App Móvil y Aplicación
 - **CA-01** — Todas las peticiones HTTP originadas desde la App Móvil y desde la Aplicación Web deben realizarse exclusivamente sobre HTTPS con TLS 1.2 o superior.
 - **CA-02** — Los certificados SSL/TLS deben ser válidos y emitidos por una autoridad certificadora reconocida.
 - **CA-03** — Los archivos PDF adjuntos cargados desde la App Móvil y descargados desde la Aplicación Web deben transmitirse de forma cifrada, sin exposición de URLs directas no autenticadas.
+
+**Nota:** Este requisito aplica a entornos de despliegue productivo. Para el alcance de esta entrega académica (localhost), se recomienda su implementación pero no es requisito de verificación obligatoria.
 
 ---
 
@@ -126,7 +128,7 @@ El motor de base de datos que respalda tanto la App Móvil como la Aplicación W
 El backend del sistema y la Aplicación Web deben desplegarse sobre un servidor web o de aplicaciones ampliamente reconocido. La App Móvil consumirá los servicios expuestos por este servidor. Esto garantiza estabilidad, soporte y facilidad de administración para el área de TI de SuperMarket.
 
 **Criterios de Aceptación:**
-- **CA-01** — El servidor debe ser uno de los aprobados: Apache Tomcat, JBoss/WildFly, GlassFish, Apache HTTP Server o IIS.
+- **CA-01** — El servidor debe ser uno de los aprobados: Node.js, Apache Tomcat, JBoss/WildFly, GlassFish, Apache HTTP Server o IIS.
 - **CA-02** — La configuración del servidor debe documentarse para facilitar su replicación en entornos de desarrollo, pruebas y producción.
 - **CA-03** — El servidor debe gestionar conexiones concurrentes provenientes tanto de la App Móvil como de la Aplicación Web sin configuraciones adicionales de pago.
 
@@ -144,16 +146,24 @@ La Aplicación Web de gestión de PQRS debe desarrollarse con alguno de los fram
 
 ---
 
-### RNF-12 · Compatibilidad móvil multiplataforma · Prioridad: ALTA
+### RNF-12 · Compatibilidad con navegadores móviles · Prioridad: ALTA
 
 **Descripción:**
-La App Móvil debe funcionar correctamente en los sistemas operativos móviles más utilizados del mercado colombiano. La Aplicación Web, al estar orientada al gestor de PQRS en un entorno de escritorio, debe ser responsiva para su uso en computadores y no requiere versión nativa móvil.
+La App Móvil, implementada como aplicación web Angular responsiva, debe
+funcionar correctamente en los navegadores móviles más utilizados del
+mercado colombiano. La Aplicación Web, orientada al gestor en entorno de
+escritorio, debe ser igualmente compatible con los navegadores modernos
+más comunes.
 
 **Criterios de Aceptación:**
-- **CA-01** — La App Móvil debe ejecutarse correctamente en Android (versión 8.0 o superior) e iOS (versión 13 o superior).
-- **CA-02** — Si la App Móvil se desarrolla con un framework multiplataforma (Flutter, React Native, Ionic), su elección debe justificarse en la documentación técnica.
-- **CA-03** — La Aplicación Web debe ser responsiva y adaptarse correctamente a pantallas de escritorio y portátiles (resoluciones desde 1024px de ancho).
-
+- **CA-01** — La App Móvil debe ejecutarse correctamente en Chrome para
+  Android (versión 90 o superior) y Safari para iOS (versión 14 o
+  superior), sin requerir instalación desde tiendas de aplicaciones.
+- **CA-02** — La Aplicación Web debe ser compatible con Chrome, Firefox
+  y Edge en sus versiones actuales (últimas dos versiones estables).
+- **CA-03** — La interfaz de la App Móvil debe adaptarse correctamente a
+  pantallas de entre 360px y 428px de ancho sin scroll horizontal ni
+  elementos cortados.
 ---
 
 ## 4. Rendimiento y Disponibilidad
@@ -223,12 +233,24 @@ Debe entregarse un script SQL completo que permita recrear el esquema de base de
 ### RNF-18 · Código fuente documentado y entregable · Prioridad: MEDIA
 
 **Descripción:**
-El código fuente de las tres componentes del sistema (App Móvil, Aplicación Web y backend) debe estar debidamente comentado y organizado, permitiendo que cualquier desarrollador pueda comprender, desplegar y mantener la solución de forma independiente.
+El código fuente de las tres componentes del sistema (App Móvil/Web en
+Angular, backend en Node.js + Express y scripts de base de datos) debe
+estar debidamente comentado y organizado, permitiendo que cualquier
+desarrollador pueda comprender, desplegar y mantener la solución de
+forma independiente.
 
 **Criterios de Aceptación:**
-- **CA-01** — Las clases y métodos principales de cada componente deben contar con comentarios que describan su propósito, parámetros y valor de retorno.
-- **CA-02** — Cada componente (App Móvil, Aplicación Web, backend) debe entregarse con un archivo README que incluya instrucciones claras de configuración y despliegue.
-- **CA-03** — Los archivos desplegables de cada plataforma (.apk/.ipa para la App Móvil, .war/.jar o equivalente para la Aplicación Web y backend) deben entregarse junto al código fuente.
+- **CA-01** — Las clases, servicios y métodos principales de cada
+  componente deben contar con comentarios que describan su propósito,
+  parámetros y valor de retorno.
+- **CA-02** — Cada componente (frontend Angular, backend Node.js y
+  base de datos) debe entregarse con un archivo README que incluya
+  instrucciones claras de configuración y despliegue local.
+- **CA-03** — El entregable del frontend debe incluir el código fuente
+  Angular completo y el build de producción generado con `ng build`.
+  El entregable del backend debe incluir el código fuente Node.js con
+  su archivo `package.json`. Ambos se entregan comprimidos junto al
+  script SQL de la base de datos.
 
 ---
 

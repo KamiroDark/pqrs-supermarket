@@ -1,75 +1,149 @@
 # Guía de contribución — PQRS SuperMarket
 
-Este documento explica cómo trabaja el equipo con Git para que
-todos sigamos el mismo flujo y no haya conflictos.
+Este documento explica cómo trabaja el equipo con Git para que todos
+sigamos el mismo flujo y no haya conflictos.
 
 ---
 
-## Ramas del proyecto
+## Estado actual de las ramas
 
-| Rama | Propósito |
-|------|-----------|
-| `main` | Versión estable. Nadie trabaja aquí directo. Solo recibe merge al cerrar un sprint. |
-| `develop` | Rama de integración. Aquí se unen todos los trabajos del equipo. |
-| `feature/nombre-tarea` | Rama personal por tarea. Se crea desde `develop` y se borra al hacer merge. |
+```
+main        ← versión estable. Solo recibe merge al CERRAR un sprint completo.
+  └── develop   ← rama de integración general del proyecto.
+        └── sprint1   ← rama activa del Sprint 1. Todo el trabajo actual va aquí.
+```
+
+> **Regla de oro:** Nadie hace push directo a `main` ni a `develop`.
+> Todo cambio pasa por `sprint1` primero, y desde ahí se hace merge
+> a `develop` al cerrar el sprint.
 
 ---
 
-## Flujo de trabajo paso a paso
+## Flujo de trabajo según la situación
 
-### 1. Antes de empezar cualquier tarea
+### Situación A — Tengo una tarea nueva asignada en el sprint actual
 
-Asegúrate de tener `develop` actualizado:
+Este es el caso normal. Sigue estos pasos en orden:
 
+**1. Asegúrate de partir desde `sprint1` actualizado:**
 ```bash
-git checkout develop
-git pull origin develop
+git checkout sprint1
+git pull origin sprint1
 ```
 
-### 2. Crear tu rama para la tarea
-
-El nombre de la rama debe ser descriptivo y en minúsculas, sin espacios:
-
+**2. Crea tu rama personal para la tarea:**
 ```bash
-git checkout -b feature/nombre-de-tu-tarea
+git checkout -b feature/nombre-descriptivo-de-tu-tarea
 ```
 
-Ejemplos reales:
+Ejemplos reales del proyecto:
 ```bash
-git checkout -b feature/requerimientos-funcionales
-git checkout -b feature/diagrama-casos-uso
-git checkout -b feature/modelo-entidad-relacion
+git checkout -b feature/rnf-correccion-final
+git checkout -b feature/diagrama-entidad-relacion
+git checkout -b feature/prototipo-formulario-cliente
 ```
 
-### 3. Trabajar en tu tarea
-
-Guarda los archivos, haz commits frecuentes con mensajes claros:
-
+**3. Trabaja, guarda y haz commits frecuentes:**
 ```bash
 git add .
-git commit -m "docs: agregar tabla de requerimientos funcionales RF-001 a RF-010"
+git commit -m "docs: corregir RNF-04 para alinear con backlog"
 ```
 
-### 4. Subir tu rama a GitHub
+**4. Sube tu rama a GitHub:**
+```bash
+git push origin feature/nombre-descriptivo-de-tu-tarea
+```
+
+**5. Abre un Pull Request en GitHub hacia `sprint1`** (no hacia `develop` ni `main`):
+- Título del PR: igual al título del Issue que estás cerrando.
+- Descripción: qué hiciste + menciona el Issue con `Closes #N`.
+- Asigna un compañero como Reviewer.
+
+---
+
+### Situación B — Necesito corregir algo que ya está en `sprint1`
+
+Aplica cuando el reviewer pidió cambios o encontraste un error después del merge.
 
 ```bash
-git push origin feature/nombre-de-tu-tarea
+# Primero actualiza sprint1
+git checkout sprint1
+git pull origin sprint1
+
+# Crea una rama de corrección (nunca edites sprint1 directo)
+git checkout -b fix/descripcion-del-error
+
+# Haz los cambios, commit y push
+git add .
+git commit -m "fix: corregir criterio CA-03 del RNF-04"
+git push origin fix/descripcion-del-error
 ```
 
-### 5. Abrir un Pull Request (PR)
+Abre un nuevo PR hacia `sprint1` con descripción de qué se corrigió y por qué.
 
-- Ve al repo en GitHub
-- Aparecerá un banner amarillo con tu rama → clic en **"Compare & pull request"**
-- Título del PR: igual al título del Issue que estás cerrando
-- Descripción: escribe qué hiciste y menciona el Issue con `Closes #N`
-  (ej: `Closes #3` cierra automáticamente el Issue 3 al hacer merge)
-- Asigna a un compañero como **Reviewer**
-- Clic en **"Create pull request"**
+---
 
-### 6. Revisión
+### Situación C — Alguien hizo cambios en `sprint1` y mi rama está desactualizada
 
-El reviewer revisa, comenta si hay algo que corregir o aprueba.
-Una vez aprobado, el líder hace el merge a `develop`.
+Ocurre cuando tu compañero hizo merge antes que tú. Hay que traer esos cambios a tu rama:
+
+```bash
+# Estando en tu rama feature
+git fetch origin
+git merge origin/sprint1
+```
+
+Si hay conflictos, Git te los marcará en los archivos. Resuélvelos manualmente,
+luego haz:
+```bash
+git add .
+git commit -m "chore: resolver conflicto con sprint1"
+```
+
+Si el conflicto es complejo o no sabes cómo resolverlo, **avísale al líder
+antes de forzar cualquier cambio.**
+
+---
+
+### Situación D — Subí algo a la rama equivocada (ej: directo a `main`)
+
+Esto ya pasó en el proyecto. El procedimiento correcto para revertirlo sin
+borrar el trabajo es:
+
+**Paso 1** — Copia el archivo o cambio que subiste mal a un lugar seguro
+(tu carpeta local, un bloc de notas, donde sea).
+
+**Paso 2** — Avísale al líder para coordinar. No hagas `git revert` ni
+`git reset` sin coordinación porque puede afectar a otros.
+
+**Paso 3** — El líder revierte el commit en la rama incorrecta si es necesario.
+
+**Paso 4** — Tú creas una rama `feature/` desde `sprint1` y subes el trabajo
+correctamente por PR.
+
+> La lección práctica: antes de hacer push, siempre verifica en qué rama estás
+> con `git branch` o mirando GitKraken. El nombre de la rama aparece destacado
+> en verde en la barra lateral izquierda.
+
+---
+
+## Ciclo de vida de una rama
+
+```
+sprint1 (actualizado)
+    │
+    ├── feature/mi-tarea   ← creas aquí, trabajas, haces commits
+    │       │
+    │       └── PR hacia sprint1 → revisión → merge
+    │
+sprint1 (con tu trabajo integrado)
+```
+
+Las ramas `feature/` y `fix/` se **borran** después del merge. No las acumules.
+Para borrar una rama local ya mergeada:
+```bash
+git branch -d feature/nombre-de-tu-tarea
+```
 
 ---
 
@@ -85,36 +159,37 @@ tipo: descripción breve en minúsculas
 |------|---------------|---------|
 | `feat` | Nueva funcionalidad | `feat: agregar endpoint POST /pqrs` |
 | `fix` | Corrección de error | `fix: corregir validación de correo` |
-| `docs` | Solo documentación | `docs: agregar especificación CU-003` |
+| `docs` | Solo documentación | `docs: corregir RNF-12 para app web Angular` |
 | `chore` | Config, estructura, dependencias | `chore: agregar .gitignore para Node` |
 | `refactor` | Reorganizar sin cambiar comportamiento | `refactor: separar rutas en archivos propios` |
 | `style` | Formato, espacios (sin cambio de lógica) | `style: aplicar formato prettier` |
 | `test` | Agregar o corregir pruebas | `test: agregar caso de prueba para login` |
 
-### Reglas del mensaje de commit
-
-- Máximo 72 caracteres en la primera línea
-- En minúsculas siempre
-- Sin punto al final
-- En español está bien para este proyecto
+**Reglas del mensaje:**
+- Máximo 72 caracteres en la primera línea.
+- En minúsculas siempre, sin punto al final.
+- En español está bien para este proyecto.
 
 ---
 
 ## Reglas del equipo
 
-1. **Nadie hace push directo a `main` ni a `develop`** — todo pasa por PR
-2. **Máximo 1 tarea activa por persona** — termina lo que empezaste antes de tomar otra
-3. **Una tarea está hecha solo cuando** está en el repo Y un compañero la revisó
-4. **Los commits son frecuentes** — no acumules 3 días de trabajo en un solo commit
-5. **Si tienes un conflicto que no puedes resolver**, avísale al líder antes de forzar cambios
+1. **Nadie hace push directo a `main` ni a `develop`** — todo pasa por PR hacia `sprint1`.
+2. **Nadie hace push directo a `sprint1`** — siempre desde una rama `feature/` o `fix/`.
+3. **Máximo 1 tarea activa por persona** — termina lo que empezaste antes de tomar otra.
+4. **Una tarea está hecha solo cuando** está en `sprint1` Y un compañero la revisó.
+5. **Los commits son frecuentes** — no acumules días de trabajo en un solo commit.
+6. **Ante un conflicto que no puedas resolver**, avísale al líder antes de forzar cambios.
+7. **Verifica siempre en qué rama estás** antes de hacer `git push`.
 
 ---
 
 ## Estructura de carpetas
 
-```
+​```
 pqrs-supermarket/
-├── frontend/         # App Angular (web + responsiva móvil)
+├── app/              # App Móvil con Ionic + Angular (cliente PQRS)
+├── frontend/         # Aplicación Web con Angular (gestor PQRS)
 ├── backend/          # API REST con Node.js + Express
 ├── base-de-datos/    # Scripts SQL
 ├── docs/
@@ -125,7 +200,35 @@ pqrs-supermarket/
 │   └── pruebas/      # Plan y resultados de pruebas
 ├── README.md
 └── CONTRIBUTING.md   # Este archivo
-```
+​```
+
+---
+
+## Gestor de paquetes — pnpm
+
+Este proyecto usa **pnpm** exclusivamente. npm no está permitido.
+
+Para instalar pnpm si no lo tienes:
+​```bash
+curl -fsSL https://get.pnpm.io/install.sh | sh -
+source ~/.zshrc
+​```
+
+Al clonar el repo, instala las dependencias en cada componente por separado:
+​```bash
+cd backend && pnpm install
+cd ../frontend && pnpm install
+cd ../app && pnpm install
+​```
+
+Comandos de arranque:
+| Componente | Comando | URL |
+|---|---|---|
+| Backend | `pnpm start` | http://localhost:3000 |
+| Angular Web | `pnpm start` | http://localhost:4200 |
+| Ionic App | `pnpm ionic serve` | http://localhost:8100 |
+
+> **Nunca uses `npm install` ni `npm start`** en este proyecto.
 
 ---
 
